@@ -1,12 +1,11 @@
-
 server:
-  port: 8080
+  port: 8082
 
 spring:
   application:
     name: ORDER-SERVICE
   datasource:
-    url: jdbc:mysql://${DB_HOST:localhost}:3306/orders?createDatabaseIfNotExist=true&serverTimezone=UTC
+    url: jdbc:mysql://${DB_HOST:localhost}:3307/orders?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:root}
   flyway:
