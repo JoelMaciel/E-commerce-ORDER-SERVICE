@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: ORDER-SERVICE
+  config:
+    import: configserver:http://localhost:9296
   datasource:
     url: jdbc:mysql://${DB_HOST:localhost}:3307/orders?createDatabaseIfNotExist=true&serverTimezone=UTC
     username: ${DB_USERNAME:root}
