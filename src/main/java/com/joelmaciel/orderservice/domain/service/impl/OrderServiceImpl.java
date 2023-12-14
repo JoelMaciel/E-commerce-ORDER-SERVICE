@@ -1,5 +1,6 @@
 package com.joelmaciel.orderservice.domain.service.impl;
 
+import com.joelmaciel.orderservice.api.openfeign.client.ProductService;
 import com.joelmaciel.orderservice.domain.OrderRepository;
 import com.joelmaciel.orderservice.domain.entity.Order;
 import com.joelmaciel.orderservice.domain.model.OrderDTO;
@@ -14,13 +15,19 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OrderServiceImpl implements OrderService {
 
+    private final ProductService productService;
     private final OrderRepository orderRepository;
 
     @Override
     public OrderDTO savePlaceOrder(OrderRequest orderRequest) {
         log.info("Placing Order Request: {}", orderRequest);
         Order order = OrderRequest.toEntity(orderRequest);
-        log.info("Order Places successfully with Order UUID: {}", order.getOrderId());
+        log.info("Creating Order with Status CREATED");
+
+        productService.reduceQuantity(orderRequest.getProductId(), orderRequest.getQuantity());
+
+        log.info("Order Placed successfully with Quantity: {}", order.getQuantity());
         return OrderDTO.toDTO(orderRepository.save(order));
+
     }
 }
