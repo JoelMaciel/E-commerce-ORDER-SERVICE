@@ -4,10 +4,15 @@ import com.joelmaciel.orderservice.domain.model.OrderDTO;
 import com.joelmaciel.orderservice.domain.model.OrderRequest;
 import com.joelmaciel.orderservice.domain.service.OrderService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -15,6 +20,19 @@ import javax.validation.Valid;
 public class OrderController {
 
     private final OrderService orderService;
+
+    @GetMapping
+    public Page<OrderDTO> getAllOrders(
+            @PageableDefault(page = 0, size = 10, sort = "orderId",direction = Sort.Direction.ASC) Pageable pageable ,
+            @RequestParam(required = false) UUID productId,
+            @RequestParam(required = false) String status) {
+        return orderService.findAllOrders(pageable,productId,status);
+    }
+
+    @GetMapping("/{orderId}")
+    public OrderDTO getOrderDetails(@PathVariable UUID orderId) {
+        return orderService.getOrderDetails(orderId);
+    }
 
     @PostMapping("/placeOrders")
     @ResponseStatus(HttpStatus.CREATED)
