@@ -15,6 +15,16 @@ services:
     networks:
       - microservices_network
 
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9411:9411"
+    restart: always
+    networks:
+      - microservices_network
+
+
 volumes:
   data-mysql-orders:
 
