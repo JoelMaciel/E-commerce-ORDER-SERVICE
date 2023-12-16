@@ -1,5 +1,6 @@
 package com.joelmaciel.orderservice.api.openfeign.request;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.joelmaciel.orderservice.domain.model.PaymentMode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,8 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentRequest {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class PaymentRequestDTO {
 
     private UUID orderId;
     private BigDecimal amount;

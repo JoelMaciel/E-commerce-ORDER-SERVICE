@@ -1,6 +1,6 @@
 package com.joelmaciel.orderservice.api.openfeign.client;
 
-import com.joelmaciel.orderservice.api.openfeign.request.PaymentRequest;
+import com.joelmaciel.orderservice.api.openfeign.request.PaymentRequestDTO;
 import com.joelmaciel.orderservice.api.openfeign.response.TransactionDetailsDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
@@ -15,5 +15,5 @@ public interface PaymentService {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public TransactionDetailsDTO doPayment(@RequestBody @Valid PaymentRequest paymentRequest);
+    TransactionDetailsDTO savePayment(@RequestBody @Valid PaymentRequestDTO paymentRequestDTO);
 }
