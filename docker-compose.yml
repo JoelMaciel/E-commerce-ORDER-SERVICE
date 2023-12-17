@@ -24,6 +24,15 @@ services:
     networks:
       - microservices_network
 
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: always
+    networks:
+      - microservices_network
+
 
 volumes:
   data-mysql-orders:

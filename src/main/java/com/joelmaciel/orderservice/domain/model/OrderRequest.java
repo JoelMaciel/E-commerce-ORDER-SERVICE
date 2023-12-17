@@ -10,7 +10,6 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -24,9 +23,6 @@ public class OrderRequest {
     private UUID productId;
     @NotNull
     @PositiveOrZero
-    private BigDecimal totalAmount;
-    @NotNull
-    @PositiveOrZero
     private Integer quantity;
 
     @Enumerated(EnumType.STRING)
@@ -36,7 +32,6 @@ public class OrderRequest {
     public static Order toEntity(OrderRequest orderRequest) {
         return Order.builder()
                 .productId(orderRequest.productId)
-                .amount(orderRequest.getTotalAmount())
                 .orderDate(Instant.now())
                 .status("CREATED")
                 .quantity(orderRequest.getQuantity())
