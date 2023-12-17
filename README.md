@@ -12,6 +12,7 @@
 
 ## Technology used :
 -  JAVA ---  SPRING BOOT ---  DOCKER  ---   KUBERNETES
+-  Resilience4j --- CircuitBreaker --- Rate Limiter --- Redis
 -  CI/CD ---  JENKINS ---  JUNIT5 ---  MOCKITO --- JACOCO
 -  API GATEWAY ---  SERVICE DISCOVERY (EUREKA)
 -  OPEN FEIGN ---  ZIPKIN --- SONARQUBE ---  OPEN API (SWAGGER)
