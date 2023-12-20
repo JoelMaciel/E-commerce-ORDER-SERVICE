@@ -10,7 +10,8 @@ import java.time.Instant;
 import java.util.UUID;
 
 @Builder
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
