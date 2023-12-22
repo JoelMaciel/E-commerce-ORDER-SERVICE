@@ -6,7 +6,9 @@ import com.joelmaciel.orderservice.api.openfeign.request.PaymentRequestDTO;
 import com.joelmaciel.orderservice.api.openfeign.response.TransactionDetailsDTO;
 import com.joelmaciel.orderservice.domain.OrderRepository;
 import com.joelmaciel.orderservice.domain.entity.Order;
+import com.joelmaciel.orderservice.domain.enums.OrderStatus;
 import com.joelmaciel.orderservice.domain.exception.OrderNotFoundException;
+import com.joelmaciel.orderservice.domain.exception.PaymentServiceException;
 import com.joelmaciel.orderservice.domain.model.OrderDTO;
 import com.joelmaciel.orderservice.domain.model.OrderRequest;
 import com.joelmaciel.orderservice.domain.model.ProductDTO;
@@ -20,11 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.Objects;
 import java.util.UUID;
 
-@Service
+
 @Log4j2
 @RequiredArgsConstructor
+@Service
 public class OrderServiceImpl implements OrderService {
 
     public static final String API_PRODUCTS = "http://PRODUCT-SERVICE/api/products/";
@@ -62,7 +66,6 @@ public class OrderServiceImpl implements OrderService {
                 API_PAYMENTS + order.getOrderId(), TransactionDetailsDTO.class
         );
 
-
         OrderDTO.ProductDetails productDetails = OrderDTO.ProductDetails.builder()
                 .name(productDTO.getName())
                 .price(productDTO.getPrice())
@@ -85,37 +88,53 @@ public class OrderServiceImpl implements OrderService {
     @Transactional
     public OrderDTO savePlaceOrder(OrderRequest orderRequest) {
         log.info("Placing Order Request: {}", orderRequest);
+        Order order = createOrderFromRequest(orderRequest);
+        processPayment(order, orderRequest);
+
+        log.info("Order Placed successfully with Quantity: {}", order.getQuantity());
+        return OrderDTO.toDTO(order);
+    }
+
+    private Order createOrderFromRequest(OrderRequest orderRequest) {
         Order order = OrderRequest.toEntity(orderRequest);
+        ProductDTO productDTO = fetchProduct(order.getProductId());
+        BigDecimal amount = calculateOrderAmount(productDTO, order.getQuantity());
 
-        ProductDTO productDTO = restTemplate.getForObject(API_PRODUCTS + order.getProductId(), ProductDTO.class);
-
-        BigDecimal amount = productDTO.getPrice().multiply(new BigDecimal(order.getQuantity()));
         order.setAmount(amount);
         orderRepository.save(order);
-
-        log.info("Creating Order with Status CREATED");
         productService.reduceQuantity(orderRequest.getProductId(), orderRequest.getQuantity());
 
-        log.info("Calling Payment Service to complete the payment");
-        PaymentRequestDTO paymentRequestDTO = PaymentRequestDTO.builder()
+        log.info("Order with Status CREATED");
+        return order;
+    }
+
+    private ProductDTO fetchProduct(UUID productId) {
+        return restTemplate.getForObject(API_PRODUCTS + productId, ProductDTO.class);
+    }
+
+    private BigDecimal calculateOrderAmount(ProductDTO productDTO, int quantity) {
+        return Objects.requireNonNull(productDTO).getPrice().multiply(new BigDecimal(quantity));
+    }
+
+    private void processPayment(Order order, OrderRequest orderRequest) {
+        PaymentRequestDTO paymentRequestDTO = buildPaymentRequestDTO(order, orderRequest, order.getAmount());
+
+        try {
+            paymentService.savePayment(paymentRequestDTO);
+            order.setStatus(OrderStatus.PLACED);
+            log.info("Payment done Successfully. Order status changed to PLACED");
+        } catch (PaymentServiceException e) {
+            order.setStatus(OrderStatus.PAYMENT_FAILED);
+            log.error("Error occurred in payment. Order status changed to PAYMENT_FAILED", e);
+        }
+    }
+
+    private PaymentRequestDTO buildPaymentRequestDTO(Order order, OrderRequest orderRequest, BigDecimal amount) {
+        return PaymentRequestDTO.builder()
                 .orderId(order.getOrderId())
                 .paymentMode(orderRequest.getPaymentMode())
                 .amount(amount)
                 .build();
-
-        String orderStatus = null;
-        try {
-            paymentService.savePayment(paymentRequestDTO);
-            log.info("Payment done Successfully. Changing the Order status to PLACED");
-            orderStatus = "PLACED";
-        } catch (Exception e) {
-            log.info("Error occurred in payment. Changing order status to PAYMENT_FAILED");
-            orderStatus = "PAYMENT_FAILED";
-        }
-        order.setStatus(orderStatus);
-
-        log.info("Order Placed successfully with Quantity: {}", order.getQuantity());
-        return OrderDTO.toDTO(order);
     }
 
 }

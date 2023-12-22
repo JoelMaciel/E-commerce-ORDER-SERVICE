@@ -1,0 +1,23 @@
+version: '3.9'
+
+services:
+  mysql_orders_test:
+    image: mysql:8.0-debian
+    container_name: mysql_orders_test
+    ports:
+      - "3309:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: orders
+    volumes:
+      - data-mysql-orders_test:/var/lib/mysql
+    restart: always
+    networks:
+      - microservices_network
+
+volumes:
+  data-mysql-orders_test:
+
+networks:
+  microservices_network:
+    driver: bridge

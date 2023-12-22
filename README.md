@@ -29,6 +29,13 @@
 ### Containers running
 ![Captura de tela de 2023-12-16 17-08-40](https://github.com/JoelMaciel/E-commerce-ORDER-SERVICE/assets/77079093/f36d1ccb-6ae6-4569-a44a-0d9dfea9e345)
 
+### Unit Tests and E2E
+![Captura de tela de 2023-12-22 09-39-26](https://github.com/JoelMaciel/E-commerce-ORDER-SERVICE/assets/77079093/084956a8-0814-4107-b82e-97a93d8c9cf5)
+### Tests 
+![Captura de tela de 2023-12-22 09-39-18](https://github.com/JoelMaciel/E-commerce-ORDER-SERVICE/assets/77079093/2103953d-3f9e-49e3-8026-9fae4c69098d)
+### Tests
+![Captura de tela de 2023-12-22 09-38-57](https://github.com/JoelMaciel/E-commerce-ORDER-SERVICE/assets/77079093/48733beb-e319-4098-8ef8-2216afda6294)
+
 ### Request All Orders
 ![Captura de tela de 2023-12-16 16-46-21](https://github.com/JoelMaciel/E-commerce-ORDER-SERVICE/assets/77079093/44446647-1ce6-48f2-841b-4be14d96fd75)
 
