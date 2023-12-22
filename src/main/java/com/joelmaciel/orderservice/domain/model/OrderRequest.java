@@ -1,6 +1,7 @@
 package com.joelmaciel.orderservice.domain.model;
 
 import com.joelmaciel.orderservice.domain.entity.Order;
+import com.joelmaciel.orderservice.domain.enums.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,7 +34,7 @@ public class OrderRequest {
         return Order.builder()
                 .productId(orderRequest.productId)
                 .orderDate(Instant.now())
-                .status("CREATED")
+                .status(OrderStatus.CREATED)
                 .quantity(orderRequest.getQuantity())
                 .build();
     }

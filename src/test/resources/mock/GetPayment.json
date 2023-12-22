@@ -1,0 +1,9 @@
+{
+  "paymentId": "354eb533-9ef7-4490-92a7-c4fa6bdf6fa5",
+  "paymentMode": "CASH",
+  "status": "SUCCESS",
+  "amount": 2000,
+  "paymentDate": "2022-03-20T10:06:10.060802Z",
+  "orderId": "2231c9a2-2a3b-4376-aed4-aa777e6af85a";
+
+}
