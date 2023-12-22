@@ -1,5 +1,6 @@
 package com.joelmaciel.orderservice.domain.entity;
 
+import com.joelmaciel.orderservice.domain.enums.OrderStatus;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Type;
@@ -29,6 +30,7 @@ public class Order {
     private Integer quantity;
     @CreationTimestamp
     private Instant orderDate;
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
     private BigDecimal amount;
 }
